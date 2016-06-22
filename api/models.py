@@ -39,7 +39,9 @@ class People(models.Model):
     def add_name(name):
         print(Epithet.objects.aggregate(Min('uses'))['uses__min'])
         epithets = Epithet.objects.filter(uses=Epithet.objects.aggregate(Min('uses'))['uses__min'])
-        epithet = epithets[random.randint(0, epithets.__len__()-1)]
+        if len(epithets) == 0:  # if db table is empty
+            return ''
+        epithet = epithets[random.randint(0, len(epithets) - 1)]
         people = People(name=name, epithet_id=epithet.id)
         people.save()
         epithet.uses += 1
